@@ -1,0 +1,16 @@
+apiVersion: v1  # Specifica la versione dell'API Kubernetes utilizzata
+kind: Service   # Indica che questo file definisce un Service, un'astrazione che esegue il load balancing e l'esposizione di un gruppo di Pod
+metadata:
+  name: myflask-service  # Nome del Service, usato per identificare il servizio all'interno del cluster
+
+spec:
+  selector:
+    app: myflask  # Selettore che abbina i Pod in base all'etichetta 'app: myflask'; il Service indirizzerà il traffico solo ai Pod con questa etichetta
+
+  ports:
+    - name: http  # Nome della porta, utile per riferimento interno
+      port: 5000  # Porta esposta dal Service all'interno del cluster
+      targetPort: 5000  # Porta su cui il Service indirizza il traffico verso i Pod target
+      nodePort: 30000  # Porta assegnata sul nodo fisico per accedere al Service dall'esterno del cluster
+
+  type: NodePort  # Tipo di Service; NodePort espone il servizio su una porta specifica di ogni nodo del cluster

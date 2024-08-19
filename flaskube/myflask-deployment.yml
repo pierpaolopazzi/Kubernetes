@@ -1,0 +1,35 @@
+apiVersion: apps/v1  # Specifica la versione dell'API Kubernetes utilizzata
+kind: Deployment     # Indica che questo file definisce un Deployment
+metadata:
+  name: myflask-deployment  # Nome del Deployment, che identifica un insieme di Pod
+
+spec:
+  replicas: 2  # Numero di repliche (Pod) da creare e mantenere attive
+  selector:
+    matchLabels:
+      app: myflask  # Selettore che abbina i Pod in base all'etichetta 'app: myflask'
+
+  template:
+    metadata:
+      labels:
+        app: myflask  # Etichetta assegnata ai Pod creati da questo template
+    spec:
+      containers:
+        - name: myflask  # Nome del contenitore all'interno del Pod
+          image: <dockerhub_username>/myflask:1  # Immagine Docker utilizzata per il contenitore
+
+          resources:
+            limits:
+              cpu: 100m  # Limite massimo di utilizzo della CPU per il contenitore
+            requests:
+              cpu: 10m  # Risorsa minima richiesta per la CPU per il contenitore
+
+          ports:
+            - containerPort: 5000  # Porta esposta dal contenitore per ricevere traffico
+
+          readinessProbe:
+            httpGet:
+              path: /  # Percorso HTTP da verificare per determinare la readiness del contenitore
+              port: 5000  # Porta su cui effettuare la richiesta HTTP
+            initialDelaySeconds: 5  # Ritardo iniziale prima di eseguire la prima sonda di readiness
+            periodSeconds: 10  # Intervallo di tempo tra le verifiche successive della readiness
